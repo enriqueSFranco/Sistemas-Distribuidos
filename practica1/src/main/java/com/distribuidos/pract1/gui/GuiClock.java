@@ -1,24 +1,43 @@
-package gui;
+package com.distribuidos.pract1.gui;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+
+import com.distribuidos.pract1.threads.ClockRunnable;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 
 /**
  *
  * @author Enrique
  */
-public class GuiClock extends javax.swing.JFrame implements Runnable {
+public class GuiClock extends javax.swing.JFrame{
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GuiClock.class);
+    private final ClockRunnable h1, h2, h3, h4;
     /**
      * Constructor 
      */
     public GuiClock() {
         initComponents(); // iniciamos el jframe
         setTitle("Practica 1");
-        h1 = new Thread(this); // objeto tipo Thread
-        h1.start(); // iniciamos el hilo_1
         setLocationRelativeTo(null); // posicionamento del jframe (centro)
+        
+        LOGGER.info("GUI inicializado");
+        h1 = new ClockRunnable("Reloj 1", labelReloj1); // objeto tipo Thread
+        h1.start(); // iniciamos el hilo_1
+        
+        h2 = new ClockRunnable("Reloj 2", labelReloj2); // objeto tipo Thread
+        h2.setRandomClock();
+        h2.start(); // iniciamos el hilo_1
+        
+        h3 = new ClockRunnable("Reloj 3", labelReloj3); // objeto tipo Thread
+        h3.setRandomClock();
+        h3.start(); // iniciamos el hilo_1
+        
+        h4 = new ClockRunnable("Reloj 4", labelReloj4); // objeto tipo Thread
+        h4.setRandomClock();
+        h4.start(); // iniciamos el hilo_1
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -27,8 +46,8 @@ public class GuiClock extends javax.swing.JFrame implements Runnable {
 
         labelReloj1 = new javax.swing.JLabel();
         labelReloj2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        labelReloj3 = new javax.swing.JLabel();
+        labelReloj4 = new javax.swing.JLabel();
         buttonReloj3 = new javax.swing.JButton();
         buttonReloj4 = new javax.swing.JButton();
         buttonReloj1 = new javax.swing.JButton();
@@ -44,11 +63,11 @@ public class GuiClock extends javax.swing.JFrame implements Runnable {
         labelReloj2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         labelReloj2.setText("00:00:00");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel3.setText("00:00:00");
+        labelReloj3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        labelReloj3.setText("00:00:00");
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel4.setText("00:00:00");
+        labelReloj4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        labelReloj4.setText("00:00:00");
 
         buttonReloj3.setBackground(new java.awt.Color(0, 153, 204));
         buttonReloj3.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
@@ -89,7 +108,7 @@ public class GuiClock extends javax.swing.JFrame implements Runnable {
                                 .addComponent(buttonReloj1))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelReloj3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGap(137, 137, 137)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonReloj3)
@@ -99,7 +118,7 @@ public class GuiClock extends javax.swing.JFrame implements Runnable {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(buttonReloj2)
                         .addComponent(labelReloj2, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(labelReloj4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -115,8 +134,8 @@ public class GuiClock extends javax.swing.JFrame implements Runnable {
                     .addComponent(buttonReloj2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
+                    .addComponent(labelReloj3)
+                    .addComponent(labelReloj4))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonReloj4)
@@ -128,56 +147,19 @@ public class GuiClock extends javax.swing.JFrame implements Runnable {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonReloj1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReloj1ActionPerformed
-        // TODO add your handling code here:
+        h1.setCurrentlyEditing(true);
+        java.awt.EventQueue.invokeLater(() -> new EditClockFrame(h1).setVisible(true));
     }//GEN-LAST:event_buttonReloj1ActionPerformed
-
-    public static void main(String args[]) {
-        
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GuiClock().setVisible(true);
-            }
-        });
-    }
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonReloj1;
     private javax.swing.JButton buttonReloj2;
     private javax.swing.JButton buttonReloj3;
     private javax.swing.JButton buttonReloj4;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel labelReloj1;
     private javax.swing.JLabel labelReloj2;
+    private javax.swing.JLabel labelReloj3;
+    private javax.swing.JLabel labelReloj4;
     // End of variables declaration//GEN-END:variables
-    private String hours, minutes, seconds;
-    Thread h1;
-
-    @Override
-    public void run() {
-       Thread reloj1 = Thread.currentThread();
-       while(reloj1 == h1) {
-           timeFormat();
-           labelReloj1.setText(hours+":"+minutes+":"+seconds);
-           try {
-               Thread.sleep(1000);
-           }catch(InterruptedException e) {
-               
-           }
-       }
-    }
-    
-    /**
-     * formato para la hora, minutos y segundos
-     * 
-     */
-    public void timeFormat() {
-        
-        Calendar calendario = new GregorianCalendar();
-
-        hours = calendario.get(Calendar.HOUR_OF_DAY) > 9 ? ""+calendario.get(Calendar.HOUR_OF_DAY) : "0"+calendario.get(Calendar.HOUR_OF_DAY);
-        minutes = calendario.get(Calendar.MINUTE) > 9 ? ""+calendario.get(Calendar.MINUTE) : "0"+calendario.get(Calendar.MINUTE);
-        seconds = calendario.get(Calendar.SECOND) > 9 ? ""+calendario.get(Calendar.SECOND) : "0"+calendario.get(Calendar.SECOND);
-    }    
+   
 }
