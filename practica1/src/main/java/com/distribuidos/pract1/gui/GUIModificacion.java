@@ -28,9 +28,9 @@ public class GUIModificacion extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.tfHora.setText("" + r.getHoras());
-        this.tfMinutos.setText("" + r.getMinutos());
-        this.tfSegundos.setText("" + r.getSegundos());
+        this.tfHora.setText(String.format("%02d", r.getHoras()));
+        this.tfMinutos.setText(String.format("%02d", r.getMinutos()));
+        this.tfSegundos.setText(String.format("%02d", r.getSegundos()));
         jSlider1.setValue((int)( 1 / r.getSpeedfactor()) * 100);        
         jSpinner1.setValue(jSlider1.getValue());
         this.r = r;
@@ -40,9 +40,9 @@ public class GUIModificacion extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.tfHora.setText("" + rt.getHoras());
-        this.tfMinutos.setText("" + rt.getMinutos());
-        this.tfSegundos.setText("" + rt.getSegundos());
+        this.tfHora.setText(String.format("%02d", rt.getHoras()));
+        this.tfMinutos.setText(String.format("%02d", rt.getMinutos()));
+        this.tfSegundos.setText(String.format("%02d", rt.getSegundos()));
         jSlider1.setValue((int)( 1 / rt.getSpeedfactor()) * 100);        
         jSpinner1.setValue(jSlider1.getValue());
         this.rt = rt;
@@ -104,9 +104,13 @@ public class GUIModificacion extends javax.swing.JFrame {
         });
 
         tfMinutos.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        tfMinutos.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        tfMinutos.setText("00");
 
         tfSegundos.setEditable(false);
         tfSegundos.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        tfSegundos.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        tfSegundos.setText("00");
 
         lblMensaje.setForeground(new java.awt.Color(255, 0, 0));
         lblMensaje.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
