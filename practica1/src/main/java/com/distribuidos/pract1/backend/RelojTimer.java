@@ -37,7 +37,7 @@ public class RelojTimer /*implements Runnable*/{
         this.segundos = segundos;
         if (this.lblReloj != null)
             this.lblReloj.setText( obtenerHora() );
-        this.temporizador = new Timer((int)(delay*speedfactor), (ActionEvent e) -> {
+        this.temporizador = new Timer((int)(speedfactor*delay), (ActionEvent e) -> {
             aumentoDeUnidad();
         });
     }
@@ -59,7 +59,7 @@ public class RelojTimer /*implements Runnable*/{
         this.delay = delay;
         if (this.lblReloj != null)
             this.lblReloj.setText( obtenerHora() );
-        this.temporizador.setDelay(delay);
+        this.temporizador.setDelay((int) (delay * speedfactor));
     }
     
     public String obtenerHora(){
@@ -133,6 +133,7 @@ public class RelojTimer /*implements Runnable*/{
     }
 
     public void setSpeedfactor(double speedfactor) {
+        this.temporizador.setDelay((int) (delay * speedfactor));
         this.speedfactor = speedfactor;
     }  
     

@@ -174,7 +174,7 @@ public class GuiClock extends javax.swing.JFrame{
 //        r4.detenerReloj();
         rt4.detenerReloj();
         java.awt.EventQueue.invokeLater(() -> {
-            GUIModificacion panel = new GUIModificacion(r4);
+            GUIModificacion panel = new GUIModificacion(rt4);
             panel.setVisible(true);
         });
     }//GEN-LAST:event_buttonReloj4ActionPerformed

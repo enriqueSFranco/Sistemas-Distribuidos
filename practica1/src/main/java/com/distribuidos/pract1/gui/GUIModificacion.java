@@ -207,7 +207,9 @@ public class GUIModificacion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        r.reanudarReloj();
+        if(r instanceof Reloj) r.reanudarReloj();
+        else if (rt instanceof RelojTimer) rt.reanudarReloj();
+        
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -217,18 +219,18 @@ public class GUIModificacion extends javax.swing.JFrame {
         }else if( !esEntero(this.tfHora.getText()) || !esEntero(this.tfMinutos.getText())){
             this.lblMensaje.setText("Hay datos erroneos. Deben ser enteros positivos");
         }else{
-            if(r != null){
+            if(r instanceof Reloj){
                 r.editarReloj(Integer.parseInt(this.tfHora.getText()), 
                     Integer.parseInt(this.tfMinutos.getText()), 
                     Integer.parseInt(this.tfSegundos.getText()), 
                     r.getDelay());
                 r.setSpeedfactor(1 / (jSlider1.getValue() / 100.0));
                 r.reanudarReloj();
-            }else{
+            }else if(rt instanceof RelojTimer){
                 rt.editarReloj(Integer.parseInt(this.tfHora.getText()), 
                     Integer.parseInt(this.tfMinutos.getText()), 
                     Integer.parseInt(this.tfSegundos.getText()), 
-                    r.getDelay());
+                    rt.getDelay());
                 rt.setSpeedfactor(1 / (jSlider1.getValue() / 100.0));
                 rt.reanudarReloj();
             }
