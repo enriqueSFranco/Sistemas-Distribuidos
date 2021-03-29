@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.distribuidos.pract1.threads;
+package com.distribuidos.pract1.backend;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author luisx
+ * @author Ángel Bravo
  */
 public class ClockRunnable implements Runnable{
     

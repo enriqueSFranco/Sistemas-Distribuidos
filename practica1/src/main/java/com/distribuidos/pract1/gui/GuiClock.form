@@ -136,6 +136,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Editar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonReloj3ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="buttonReloj4">
       <Properties>
@@ -150,6 +153,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Editar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonReloj4ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="buttonReloj1">
       <Properties>
@@ -181,6 +187,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Editar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonReloj2ActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

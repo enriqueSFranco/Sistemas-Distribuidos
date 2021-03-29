@@ -1,9 +1,10 @@
 package com.distribuidos.pract1.gui;
 
-
-import com.distribuidos.pract1.threads.ClockRunnable;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
+import com.distribuidos.pract1.backend.Reloj;
+import com.distribuidos.pract1.backend.RelojTimer;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Random;
 
 
 /**
@@ -12,8 +13,6 @@ import org.slf4j.Logger;
  */
 public class GuiClock extends javax.swing.JFrame{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GuiClock.class);
-    private final ClockRunnable h1, h2, h3, h4;
     /**
      * Constructor 
      */
@@ -21,23 +20,9 @@ public class GuiClock extends javax.swing.JFrame{
         initComponents(); // iniciamos el jframe
         setTitle("Practica 1");
         setLocationRelativeTo(null); // posicionamento del jframe (centro)
-        
-        LOGGER.info("GUI inicializado");
-        h1 = new ClockRunnable("Reloj 1", labelReloj1); // objeto tipo Thread
-        h1.start(); // iniciamos el hilo_1
-        
-        h2 = new ClockRunnable("Reloj 2", labelReloj2); // objeto tipo Thread
-        h2.setRandomClock();
-        h2.start(); // iniciamos el hilo_1
-        
-        h3 = new ClockRunnable("Reloj 3", labelReloj3); // objeto tipo Thread
-        h3.setRandomClock();
-        h3.start(); // iniciamos el hilo_1
-        
-        h4 = new ClockRunnable("Reloj 4", labelReloj4); // objeto tipo Thread
-        h4.setRandomClock();
-        h4.start(); // iniciamos el hilo_1
-        
+//        h1 = new Thread(this); // objeto tipo Thread
+//        h1.start(); // iniciamos el hilo_1
+        initHilos();
     }
 
     @SuppressWarnings("unchecked")
@@ -73,11 +58,21 @@ public class GuiClock extends javax.swing.JFrame{
         buttonReloj3.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         buttonReloj3.setForeground(new java.awt.Color(255, 255, 255));
         buttonReloj3.setText("Editar");
+        buttonReloj3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonReloj3ActionPerformed(evt);
+            }
+        });
 
         buttonReloj4.setBackground(new java.awt.Color(0, 153, 204));
         buttonReloj4.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         buttonReloj4.setForeground(new java.awt.Color(255, 255, 255));
         buttonReloj4.setText("Editar");
+        buttonReloj4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonReloj4ActionPerformed(evt);
+            }
+        });
 
         buttonReloj1.setBackground(new java.awt.Color(0, 153, 204));
         buttonReloj1.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
@@ -93,6 +88,11 @@ public class GuiClock extends javax.swing.JFrame{
         buttonReloj2.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         buttonReloj2.setForeground(new java.awt.Color(255, 255, 255));
         buttonReloj2.setText("Editar");
+        buttonReloj2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonReloj2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -147,9 +147,38 @@ public class GuiClock extends javax.swing.JFrame{
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonReloj1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReloj1ActionPerformed
-        h1.setCurrentlyEditing(true);
-        java.awt.EventQueue.invokeLater(() -> new EditClockFrame(h1).setVisible(true));
+        r1.detenerReloj();
+        java.awt.EventQueue.invokeLater(() -> {
+            GUIModificacion panel = new GUIModificacion(r1);
+            panel.setVisible(true);
+        });
     }//GEN-LAST:event_buttonReloj1ActionPerformed
+
+    private void buttonReloj2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReloj2ActionPerformed
+        r2.detenerReloj();
+        java.awt.EventQueue.invokeLater(() -> {
+            GUIModificacion panel = new GUIModificacion(r2);
+            panel.setVisible(true);
+        });
+    }//GEN-LAST:event_buttonReloj2ActionPerformed
+
+    private void buttonReloj3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReloj3ActionPerformed
+        r3.detenerReloj();
+        java.awt.EventQueue.invokeLater(() -> {
+            GUIModificacion panel = new GUIModificacion(r3);
+            panel.setVisible(true);
+        });
+    }//GEN-LAST:event_buttonReloj3ActionPerformed
+
+    private void buttonReloj4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReloj4ActionPerformed
+//        r4.detenerReloj();
+        rt4.detenerReloj();
+        java.awt.EventQueue.invokeLater(() -> {
+            GUIModificacion panel = new GUIModificacion(r4);
+            panel.setVisible(true);
+        });
+    }//GEN-LAST:event_buttonReloj4ActionPerformed
+  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonReloj1;
@@ -161,5 +190,41 @@ public class GuiClock extends javax.swing.JFrame{
     private javax.swing.JLabel labelReloj3;
     private javax.swing.JLabel labelReloj4;
     // End of variables declaration//GEN-END:variables
-   
+    private String hours, minutes, seconds;
+    private Thread h1, h2, h3, h4;
+    private Reloj r1, r2, r3, r4;
+    private RelojTimer rt4;
+    
+    private void initHilos(){
+        Calendar calendario = new GregorianCalendar();
+        Random r = new Random();
+        r1 = new Reloj(labelReloj1, calendario.get(Calendar.HOUR_OF_DAY), calendario.get(Calendar.MINUTE), calendario.get(Calendar.SECOND));
+        r2 = new Reloj(labelReloj2, r.nextInt(24), r.nextInt(60), r.nextInt(60));
+        r3 = new Reloj(labelReloj3, r.nextInt(24), r.nextInt(60), r.nextInt(60));
+//        r4 = new Reloj(labelReloj4, r.nextInt(24), r.nextInt(60), r.nextInt(60));
+        rt4 = new RelojTimer(labelReloj4, r.nextInt(24), r.nextInt(60), r.nextInt(60));
+        
+        h1 = new Thread(r1);
+        h1.start();
+        h2 = new Thread(r2);
+        h2.start();
+        h3 = new Thread(r3);
+        h3.start();
+//        h4 = new Thread(r4);
+//        h4.start();
+        rt4.reanudarReloj();
+    }
+    
+    /**
+     * formato para la hora, minutos y segundos
+     * 
+     */
+    public void timeFormat() {
+        
+        Calendar calendario = new GregorianCalendar();
+
+        hours = calendario.get(Calendar.HOUR_OF_DAY) > 9 ? ""+calendario.get(Calendar.HOUR_OF_DAY) : "0"+calendario.get(Calendar.HOUR_OF_DAY);
+        minutes = calendario.get(Calendar.MINUTE) > 9 ? ""+calendario.get(Calendar.MINUTE) : "0"+calendario.get(Calendar.MINUTE);
+        seconds = calendario.get(Calendar.SECOND) > 9 ? ""+calendario.get(Calendar.SECOND) : "0"+calendario.get(Calendar.SECOND);
+    }    
 }
