@@ -22,12 +22,12 @@ import javax.swing.JTextField;
  *
  * @author Enrique
  */
-public class GuiClock extends javax.swing.JFrame implements Runnable {
+public class GuiClockDavid extends javax.swing.JFrame implements Runnable {
 
     /**
      * Constructor 
      */
-    public GuiClock() {
+    public GuiClockDavid() {
         initComponents(); // iniciamos el jframe
         setTitle("Practica 1");
         setLocationRelativeTo(null); // posicionamento del jframe (centro)
@@ -186,7 +186,7 @@ public class GuiClock extends javax.swing.JFrame implements Runnable {
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GuiClock().setVisible(true);
+                new GuiClockDavid().setVisible(true);
             }
         });
     }
