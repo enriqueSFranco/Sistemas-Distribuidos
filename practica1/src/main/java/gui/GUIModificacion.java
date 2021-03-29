@@ -6,6 +6,7 @@
 package gui;
 
 import backend.Reloj;
+import backend.RelojTimer;
 
 /**
  *
@@ -14,6 +15,7 @@ import backend.Reloj;
 public class GUIModificacion extends javax.swing.JFrame {
 
     private Reloj r;
+    private RelojTimer rt;
     
     /**
      * Creates new form GUIModificacion
@@ -31,6 +33,17 @@ public class GUIModificacion extends javax.swing.JFrame {
         this.tfSegundos.setText("" + r.getSegundos());
         this.tfVelocidad.setText("" + r.getDelay());
         this.r = r;
+    }
+    
+    public GUIModificacion(RelojTimer rt) {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.tfHora.setText("" + rt.getHoras());
+        this.tfMinutos.setText("" + rt.getMinutos());
+        this.tfSegundos.setText("" + rt.getSegundos());
+        this.tfVelocidad.setText("" + rt.getDelay());
+        this.rt = rt;
     }
 
     /**
@@ -152,11 +165,20 @@ public class GUIModificacion extends javax.swing.JFrame {
         }else if( !esEntero(this.tfHora.getText()) || !esEntero(this.tfMinutos.getText()) || !esEntero(this.tfSegundos.getText()) || !esEntero(this.tfVelocidad.getText()) ){
             this.lblMensaje.setText("Hay datos erroneos. Deben ser enteros positivos");
         }else{
-            r.editarReloj(Integer.parseInt(this.tfHora.getText()), 
+            if(r != null){
+                r.editarReloj(Integer.parseInt(this.tfHora.getText()), 
                     Integer.parseInt(this.tfMinutos.getText()), 
                     Integer.parseInt(this.tfSegundos.getText()), 
                     Integer.parseInt(this.tfVelocidad.getText()));
-            r.reanudarReloj();
+                r.reanudarReloj();
+            }else{
+                rt.editarReloj(Integer.parseInt(this.tfHora.getText()), 
+                    Integer.parseInt(this.tfMinutos.getText()), 
+                    Integer.parseInt(this.tfSegundos.getText()), 
+                    Integer.parseInt(this.tfVelocidad.getText()));
+                rt.reanudarReloj();
+            }
+            
             this.dispose();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
