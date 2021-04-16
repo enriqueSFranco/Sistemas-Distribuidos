@@ -1,7 +1,6 @@
 package com.distribuidos.pract1.gui;
 
 import com.distribuidos.pract1.backend.Reloj;
-import com.distribuidos.pract1.backend.RelojTimer;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
@@ -171,10 +170,9 @@ public class GuiClock extends javax.swing.JFrame{
     }//GEN-LAST:event_buttonReloj3ActionPerformed
 
     private void buttonReloj4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReloj4ActionPerformed
-//        r4.detenerReloj();
-        rt4.detenerReloj();
+        r4.detenerReloj();
         java.awt.EventQueue.invokeLater(() -> {
-            GUIModificacion panel = new GUIModificacion(rt4);
+            GUIModificacion panel = new GUIModificacion(r4);
             panel.setVisible(true);
         });
     }//GEN-LAST:event_buttonReloj4ActionPerformed
@@ -193,7 +191,6 @@ public class GuiClock extends javax.swing.JFrame{
     private String hours, minutes, seconds;
     private Thread h1, h2, h3, h4;
     private Reloj r1, r2, r3, r4;
-    private RelojTimer rt4;
     
     private void initHilos(){
         Calendar calendario = new GregorianCalendar();
@@ -201,8 +198,7 @@ public class GuiClock extends javax.swing.JFrame{
         r1 = new Reloj(labelReloj1, calendario.get(Calendar.HOUR_OF_DAY), calendario.get(Calendar.MINUTE), calendario.get(Calendar.SECOND));
         r2 = new Reloj(labelReloj2, r.nextInt(24), r.nextInt(60), r.nextInt(60));
         r3 = new Reloj(labelReloj3, r.nextInt(24), r.nextInt(60), r.nextInt(60));
-//        r4 = new Reloj(labelReloj4, r.nextInt(24), r.nextInt(60), r.nextInt(60));
-        rt4 = new RelojTimer(labelReloj4, r.nextInt(24), r.nextInt(60), r.nextInt(60));
+        r4 = new Reloj(labelReloj4, r.nextInt(24), r.nextInt(60), r.nextInt(60));
         
         h1 = new Thread(r1);
         h1.start();
@@ -210,9 +206,8 @@ public class GuiClock extends javax.swing.JFrame{
         h2.start();
         h3 = new Thread(r3);
         h3.start();
-//        h4 = new Thread(r4);
-//        h4.start();
-        rt4.reanudarReloj();
+        h4 = new Thread(r4);
+        h4.start();
     }
     
     /**

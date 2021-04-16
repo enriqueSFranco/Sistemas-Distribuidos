@@ -6,7 +6,6 @@
 package com.distribuidos.pract1.gui;
 
 import com.distribuidos.pract1.backend.Reloj;
-import com.distribuidos.pract1.backend.RelojTimer;
 
 /**
  *
@@ -15,7 +14,6 @@ import com.distribuidos.pract1.backend.RelojTimer;
 public class GUIModificacion extends javax.swing.JFrame {
 
     private Reloj r;
-    private RelojTimer rt;
     
     /**
      * Creates new form GUIModificacion
@@ -34,18 +32,6 @@ public class GUIModificacion extends javax.swing.JFrame {
         jSlider1.setValue((int)( 1 / r.getSpeedfactor()) * 100);        
         jSpinner1.setValue(jSlider1.getValue());
         this.r = r;
-    }
-    
-    public GUIModificacion(RelojTimer rt) {
-        initComponents();
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.tfHora.setText(String.format("%02d", rt.getHoras()));
-        this.tfMinutos.setText(String.format("%02d", rt.getMinutos()));
-        this.tfSegundos.setText(String.format("%02d", rt.getSegundos()));
-        jSlider1.setValue((int)( 1 / rt.getSpeedfactor()) * 100);        
-        jSpinner1.setValue(jSlider1.getValue());
-        this.rt = rt;
     }
 
     /**
@@ -211,8 +197,7 @@ public class GUIModificacion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if(r instanceof Reloj) r.reanudarReloj();
-        else if (rt instanceof RelojTimer) rt.reanudarReloj();
+        r.reanudarReloj();
         
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -223,21 +208,12 @@ public class GUIModificacion extends javax.swing.JFrame {
         }else if( !esEntero(this.tfHora.getText()) || !esEntero(this.tfMinutos.getText())){
             this.lblMensaje.setText("Hay datos erroneos. Deben ser enteros positivos");
         }else{
-            if(r instanceof Reloj){
-                r.editarReloj(Integer.parseInt(this.tfHora.getText()), 
-                    Integer.parseInt(this.tfMinutos.getText()), 
-                    Integer.parseInt(this.tfSegundos.getText()), 
-                    r.getDelay());
-                r.setSpeedfactor(1 / (jSlider1.getValue() / 100.0));
-                r.reanudarReloj();
-            }else if(rt instanceof RelojTimer){
-                rt.editarReloj(Integer.parseInt(this.tfHora.getText()), 
-                    Integer.parseInt(this.tfMinutos.getText()), 
-                    Integer.parseInt(this.tfSegundos.getText()), 
-                    rt.getDelay());
-                rt.setSpeedfactor(1 / (jSlider1.getValue() / 100.0));
-                rt.reanudarReloj();
-            }
+            r.editarReloj(Integer.parseInt(this.tfHora.getText()), 
+                Integer.parseInt(this.tfMinutos.getText()), 
+                Integer.parseInt(this.tfSegundos.getText()), 
+                r.getDelay());
+            r.setSpeedfactor(1 / (jSlider1.getValue() / 100.0));
+            r.reanudarReloj();
             this.dispose();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
