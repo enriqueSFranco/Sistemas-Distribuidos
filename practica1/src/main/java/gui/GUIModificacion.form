@@ -133,6 +133,9 @@
     <Component class="javax.swing.JTextField" name="tfMinutos">
     </Component>
     <Component class="javax.swing.JTextField" name="tfSegundos">
+      <Properties>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="tfVelocidad">
     </Component>

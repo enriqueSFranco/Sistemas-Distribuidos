@@ -91,6 +91,8 @@ public class GUIModificacion extends javax.swing.JFrame {
             }
         });
 
+        tfSegundos.setEnabled(false);
+
         lblMensaje.setForeground(new java.awt.Color(255, 0, 0));
         lblMensaje.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
