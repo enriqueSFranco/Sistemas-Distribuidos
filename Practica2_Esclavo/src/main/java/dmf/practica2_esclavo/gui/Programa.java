@@ -5,6 +5,7 @@
  */
 package dmf.practica2_esclavo.gui;
 
+import dmf.practica2_esclavo.backend.Configuracion;
 import dmf.practica2_esclavo.backend.Red;
 import dmf.practica2_esclavo.backend.Reloj;
 import java.util.Random;
@@ -28,8 +29,9 @@ public class Programa {
         v = new Ventana();
         v.setVisible(true);
 
+        Configuracion.cargarDatosDeRed();
         //Inicializamos variables de red y reloj sin ejecutar
-        red = new Red();
+        red = new Red(Configuracion.identificador, Configuracion.interfaz, Configuracion.ip, Configuracion.puerto);
         reloj = new Reloj(v.getLbl_hora(), r.nextInt(24), r.nextInt(60), r.nextInt(60));
 
         //Ejecutamos hilo de control de red

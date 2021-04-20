@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dmf.practica2_esclavo.backend;
+package dmf.practica2.backend;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -39,11 +39,7 @@ public class Red {
     private int puerto;
     private int identificador;
     
-    // 4 bytes para comando
-    // 4 bytes para identificador
-    // 4 bytes para cada dato: horas, minutos, segundos, delay
-    // Total: 24
-    private int tam_buffer = 24; 
+    private int tam_buffer = 4 + 4 * 5; // 4 para la instruccion entera, 4 para el identificador y 4*n de datos del reloj
     
     private SocketAddress socketMulticast;
     private DatagramChannel canalMulticast;
@@ -59,10 +55,10 @@ public class Red {
         this.interfaz = interfaz;
     }
     
-    public void cicloPrincipal(Reloj r){
+    public void cicloPrincipal(Reloj r1, Reloj r2, Reloj r3){
         try {
             ByteBuffer b = ByteBuffer.allocate( this.tam_buffer );
-            int instruccion, ident;
+            int instruccion, numeroReloj;
             while( this.continuar ){
                 this.selector.select();
                 Iterator<SelectionKey> iterador = this.selector.selectedKeys().iterator();
@@ -77,18 +73,28 @@ public class Red {
                         b.flip();
                         
                         instruccion = b.getInt();
-                        // La instruccion de CONFIRMAR se descarta en la version final
+                        // Funciones pensadas antes de la explicación de la practica donde se tenía en cuenta la conexión
+                        // de un reloj esclavo y la solicitud del esclavo al maestro. En practica nunca se pasa por este
+                        // código
                         switch(instruccion){
-                            case Red.CONFIRMAR:
-                                solicitarReloj();
+                            case Red.CONECTAR:
+                                confirmarConexion();
                                 break;
-                            case Red.REEMPLAZAR:
-                                ident = b.getInt();
-                                if(ident == this.identificador || ident == 0)
-                                    recibirReloj(b, r);
-                                //System.out.println("Instruccion: " + instruccion + "\nID: " + ident + "\nMiID: " + this.identificador);
-                                break;
-                            default:
+                            case Red.SOLICITAR:
+                                numeroReloj = b.getInt();
+                                switch (numeroReloj) {
+                                    case 1:
+                                        enviarReloj(numeroReloj, r1);
+                                        break;
+                                    case 2:
+                                        enviarReloj(numeroReloj, r2);
+                                        break;
+                                    case 3:
+                                        enviarReloj(numeroReloj, r3);
+                                        break;
+                                    default:
+                                        break;
+                                }
                                 break;
                         }
                     }
@@ -100,12 +106,16 @@ public class Red {
         }
     }
     
+    /**
+     *  prepararCanal - Se prepara toda la configuracion multicast del canal para poder
+     *      comunicarse con los esclavos
+     */
     public void prepararCanal(){
         try {
             NetworkInterface ni;
             InetAddress grupo;
             
-            ni = NetworkInterface.getByName(this.interfaz);
+            ni = NetworkInterface.getByName( this.interfaz );
             grupo = InetAddress.getByName(this.ip);
             
             this.socketMulticast = new InetSocketAddress(this.ip, this.puerto);
@@ -126,6 +136,9 @@ public class Red {
         }
     }
     
+    /**
+     *  cerrarCanal - 
+     */
     public void cerrarCanal(){
         try {
             this.canalMulticast.close();
@@ -134,12 +147,18 @@ public class Red {
         }
     }
     
-    public void solicitarReloj(){
+    public void enviarReloj(int identificadorReloj, Reloj r){
         try {
+            //Un byte para mensaje y 4*n datos enteros a enviar
             ByteBuffer b = ByteBuffer.allocate( this.tam_buffer );
 
             b.clear();
-            b.putInt(Red.SOLICITAR);
+            b.putInt(Red.REEMPLAZAR);
+            b.putInt(identificadorReloj);
+            b.putInt(r.getHoras());
+            b.putInt(r.getMinutos());
+            b.putInt(r.getSegundos());
+            b.putInt(r.getDelay());
             b.flip();
             this.canalMulticast.send(b, this.socketMulticast);
         } catch (Exception e) {
@@ -147,10 +166,15 @@ public class Red {
         }
     }
     
-    public void recibirReloj(ByteBuffer b, Reloj r){
+    public void confirmarConexion(){
         try {
-            r.editarReloj(b.getInt(), b.getInt(), b.getInt(), b.getInt());
-            
+            //Un byte para mensaje y 4*n datos enteros a enviar
+            ByteBuffer b = ByteBuffer.allocate( this.tam_buffer );
+
+            b.clear();
+            b.putInt(Red.CONFIRMAR);
+            b.flip();
+            this.canalMulticast.send(b, this.socketMulticast);
         } catch (Exception e) {
             e.printStackTrace();
         }
