@@ -30,7 +30,7 @@ public class GUIModificacion extends javax.swing.JFrame {
         this.tfHora.setText(String.format("%02d", r.getHoras()));
         this.tfMinutos.setText(String.format("%02d", r.getMinutos()));
         this.tfSegundos.setText(String.format("%02d", r.getSegundos()));
-        jSlider1.setValue((int)( 1 / r.getSpeedfactor()) * 100);        
+        jSlider1.setValue((int)( 1 / r.getSpeedfactor()) * 100);
         jSpinner1.setValue(jSlider1.getValue());
         this.r = r;
     }
@@ -209,11 +209,11 @@ public class GUIModificacion extends javax.swing.JFrame {
         }else if( !esEntero(this.tfHora.getText()) || !esEntero(this.tfMinutos.getText())){
             this.lblMensaje.setText("Hay datos erroneos. Deben ser enteros positivos");
         }else{
+            r.setSpeedfactor(1 / (jSlider1.getValue() / 100.0));
             r.editarReloj(Integer.parseInt(this.tfHora.getText()), 
                 Integer.parseInt(this.tfMinutos.getText()), 
                 Integer.parseInt(this.tfSegundos.getText()), 
                 r.getDelay());
-            r.setSpeedfactor(1 / (jSlider1.getValue() / 100.0));
             r.reanudarReloj();
             this.dispose();
         }

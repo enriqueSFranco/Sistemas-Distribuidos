@@ -158,7 +158,7 @@ public class Red {
             b.putInt(r.getHoras());
             b.putInt(r.getMinutos());
             b.putInt(r.getSegundos());
-            b.putInt(r.getDelay());
+            b.putInt((int) (r.getDelay() * r.getSpeedfactor()));
             b.flip();
             this.canalMulticast.send(b, this.socketMulticast);
         } catch (Exception e) {

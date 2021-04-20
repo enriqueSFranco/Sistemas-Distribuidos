@@ -37,6 +37,7 @@ public class Reloj implements Runnable{
     }
 
     private JLabel lblReloj;
+    private JLabel lblDelay;
     private int horas;
     private int minutos;
     private int segundos;
@@ -45,13 +46,18 @@ public class Reloj implements Runnable{
     private boolean activo = true;
     private boolean pausado = false;
     
-    public Reloj (JLabel lblReloj, int horas, int minutos, int segundos){
+    public Reloj (JLabel lblReloj, JLabel lblDelay, int horas, int minutos, int segundos){
         this.lblReloj = lblReloj;
+        this.lblDelay = lblDelay;
         this.horas = horas;
         this.minutos = minutos;
         this.segundos = segundos;
-        if (this.lblReloj != null)
+        if (this.lblReloj != null){
             this.lblReloj.setText( obtenerHora() );
+        }
+        if (this.lblDelay != null){
+            this.lblDelay.setText( this.delay + " ms" );
+        }
     }
     
     public void detenerReloj(){
@@ -69,8 +75,10 @@ public class Reloj implements Runnable{
         this.minutos = minutos;
         this.segundos = segundos;
         this.delay = delay;
-        if (this.lblReloj != null)
+        if (this.lblReloj != null){
             this.lblReloj.setText( obtenerHora() );
+            this.lblDelay.setText( this.getDelay() + " ms");
+        }
     }
     
     public String obtenerHora(){

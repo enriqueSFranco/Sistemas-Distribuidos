@@ -30,9 +30,11 @@ public class Programa {
         v.setVisible(true);
 
         Configuracion.cargarDatosDeRed();
+        //
+        v.setTitle("Reloj " + Configuracion.identificador);
         //Inicializamos variables de red y reloj sin ejecutar
         red = new Red(Configuracion.identificador, Configuracion.interfaz, Configuracion.ip, Configuracion.puerto);
-        reloj = new Reloj(v.getLbl_hora(), r.nextInt(24), r.nextInt(60), r.nextInt(60));
+        reloj = new Reloj(v.getLbl_hora(), v.getLbl_delay(), r.nextInt(24), r.nextInt(60), r.nextInt(60));
 
         //Ejecutamos hilo de control de red
         red.prepararCanal();
