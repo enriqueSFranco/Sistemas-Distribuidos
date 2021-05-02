@@ -3,14 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package backend;
+package com.distribuidos.pract1.backend;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
-import javax.swing.Timer;
 
 /**
  *
@@ -38,12 +35,20 @@ public class Reloj implements Runnable{
     public int getSegundos() {
         return segundos;
     }
+    
+    /**
+     * @return the segundos
+     */
+    public double getSpeedfactor() {
+        return speedfactor;
+    }
 
     private JLabel lblReloj;
     private int horas;
     private int minutos;
     private int segundos;
     private int delay = 1000;
+    private double speedfactor = 1.0;
     
     private boolean activo = true;
     private boolean pausado = false;
@@ -67,6 +72,10 @@ public class Reloj implements Runnable{
         System.out.println("Reanudar");
     }
     
+    public void setSpeedfactor(double speedfactor) {
+        this.speedfactor = speedfactor;
+    }  
+    
     public void editarReloj(int horas, int minutos, int segundos, int delay){
         this.horas = horas;
         this.minutos = minutos;
@@ -89,7 +98,7 @@ public class Reloj implements Runnable{
             try {
                 if(!pausado){
                     try {
-                        Thread.sleep(this.getDelay());
+                        Thread.sleep((long) (delay * speedfactor));
                         this.segundos++;
                         if(this.getSegundos() == 60){
                             this.segundos = 0;
@@ -113,7 +122,7 @@ public class Reloj implements Runnable{
                     //System.out.println("En espera");
                 }
                 
-            } catch (Exception ex) {
+            } catch (InterruptedException ex) {
                 Logger.getLogger(Reloj.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

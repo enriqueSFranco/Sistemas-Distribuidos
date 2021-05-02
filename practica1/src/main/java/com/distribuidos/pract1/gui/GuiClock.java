@@ -1,28 +1,16 @@
-package gui;
+package com.distribuidos.pract1.gui;
 
-import backend.Reloj;
-import backend.RelojTimer;
-import java.awt.GridLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import com.distribuidos.pract1.backend.Reloj;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 
 /**
  *
  * @author Enrique
  */
-public class GuiClock extends javax.swing.JFrame implements Runnable {
+public class GuiClock extends javax.swing.JFrame{
 
     /**
      * Constructor 
@@ -159,38 +147,36 @@ public class GuiClock extends javax.swing.JFrame implements Runnable {
 
     private void buttonReloj1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReloj1ActionPerformed
         r1.detenerReloj();
-        GUIModificacion panel = new GUIModificacion(r1);
-        panel.setVisible(true);
+        java.awt.EventQueue.invokeLater(() -> {
+            GUIModificacion panel = new GUIModificacion(r1);
+            panel.setVisible(true);
+        });
     }//GEN-LAST:event_buttonReloj1ActionPerformed
 
     private void buttonReloj2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReloj2ActionPerformed
         r2.detenerReloj();
-        GUIModificacion panel = new GUIModificacion(r2);
-        panel.setVisible(true);
+        java.awt.EventQueue.invokeLater(() -> {
+            GUIModificacion panel = new GUIModificacion(r2);
+            panel.setVisible(true);
+        });
     }//GEN-LAST:event_buttonReloj2ActionPerformed
 
     private void buttonReloj3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReloj3ActionPerformed
         r3.detenerReloj();
-        GUIModificacion panel = new GUIModificacion(r3);
-        panel.setVisible(true);
+        java.awt.EventQueue.invokeLater(() -> {
+            GUIModificacion panel = new GUIModificacion(r3);
+            panel.setVisible(true);
+        });
     }//GEN-LAST:event_buttonReloj3ActionPerformed
 
     private void buttonReloj4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReloj4ActionPerformed
-//        r4.detenerReloj();
-        rt4.detenerReloj();
-        GUIModificacion panel = new GUIModificacion(rt4);
-        panel.setVisible(true);
-    }//GEN-LAST:event_buttonReloj4ActionPerformed
-
-    public static void main(String args[]) {
-        
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GuiClock().setVisible(true);
-            }
+        r4.detenerReloj();
+        java.awt.EventQueue.invokeLater(() -> {
+            GUIModificacion panel = new GUIModificacion(r4);
+            panel.setVisible(true);
         });
-    }
-   
+    }//GEN-LAST:event_buttonReloj4ActionPerformed
+  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonReloj1;
@@ -205,21 +191,6 @@ public class GuiClock extends javax.swing.JFrame implements Runnable {
     private String hours, minutes, seconds;
     private Thread h1, h2, h3, h4;
     private Reloj r1, r2, r3, r4;
-    private RelojTimer rt4;
-
-    @Override
-    public void run() {
-       Thread reloj1 = Thread.currentThread();
-       while(reloj1 == h1) {
-           timeFormat();
-           labelReloj1.setText(hours+":"+minutes+":"+seconds);
-           try {
-               Thread.sleep(1000);
-           }catch(InterruptedException e) {
-               
-           }
-       }
-    }
     
     private void initHilos(){
         Calendar calendario = new GregorianCalendar();
@@ -227,8 +198,7 @@ public class GuiClock extends javax.swing.JFrame implements Runnable {
         r1 = new Reloj(labelReloj1, calendario.get(Calendar.HOUR_OF_DAY), calendario.get(Calendar.MINUTE), calendario.get(Calendar.SECOND));
         r2 = new Reloj(labelReloj2, r.nextInt(24), r.nextInt(60), r.nextInt(60));
         r3 = new Reloj(labelReloj3, r.nextInt(24), r.nextInt(60), r.nextInt(60));
-//        r4 = new Reloj(labelReloj4, r.nextInt(24), r.nextInt(60), r.nextInt(60));
-        rt4 = new RelojTimer(labelReloj4, r.nextInt(24), r.nextInt(60), r.nextInt(60));
+        r4 = new Reloj(labelReloj4, r.nextInt(24), r.nextInt(60), r.nextInt(60));
         
         h1 = new Thread(r1);
         h1.start();
@@ -236,9 +206,8 @@ public class GuiClock extends javax.swing.JFrame implements Runnable {
         h2.start();
         h3 = new Thread(r3);
         h3.start();
-//        h4 = new Thread(r4);
-//        h4.start();
-        rt4.reanudarReloj();
+        h4 = new Thread(r4);
+        h4.start();
     }
     
     /**
