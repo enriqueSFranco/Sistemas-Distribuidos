@@ -7,7 +7,14 @@ package com.distribuidos.cliente.gui;
 
 import com.distribuidos.cliente.backend.ClientOperation;
 import com.distribuidos.cliente.backend.Reloj;
+import com.distribuidos.models.ClientConnect;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Calendar;
@@ -26,35 +33,39 @@ public class MainView extends javax.swing.JFrame {
 
     private Thread clockThread;
     private Reloj reloj;
+    private ClientConnect preferences;
 
     /**
      * Creates new form MainView
      */
     public MainView() {
         initComponents();
-        
+
         this.setTitle("Modo: cliente");
         this.setLocationRelativeTo(null);
         this.setLayout(null);
         this.setResizable(false);
         this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
 
-        try{
-            client = new ClientOperation();
-        }catch(NotBoundException nx){
+        getPreferences();
+        
+        try {
+            client = new ClientOperation(preferences.getMainServer().getHostAddress(), 
+                    preferences.getMainServerPort());
+        } catch (NotBoundException nx) {
             LOGGER.error("No se pudo conectar", nx);
             JOptionPane.showConfirmDialog(null,
                     nx.getMessage(), "Error al conectar con el servidor",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
-            
+
             System.exit(1);
             return;
-        }catch(RemoteException rx){
+        } catch (RemoteException rx) {
             LOGGER.error("No se pudo conectar al servidor", rx);
             JOptionPane.showConfirmDialog(null,
                     rx.getMessage(), "Error al conectar con el servidor",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
-            
+
             System.exit(1);
             return;
         }
@@ -79,6 +90,48 @@ public class MainView extends javax.swing.JFrame {
         clockThread.start();
     }
 
+    public void getPreferences() {
+        javax.swing.JMenu jMenuPreferences = new javax.swing.JMenu();
+        jMenuBar1.removeAll();
+        
+        javax.swing.JMenuItem preferencesItem = new javax.swing.JMenuItem();
+        preferencesItem.setText("Editar preferencias");
+        
+        preferencesItem.addActionListener((e) -> {
+            java.awt.EventQueue.invokeLater(() -> {
+                new ClientEditPreferences(this).setVisible(true);
+            });
+        });
+        
+        jMenuPreferences.setText("Edición");
+        jMenuPreferences.add(preferencesItem);
+        jMenuBar1.add(jMenuPreferences);
+        
+        try{
+            // Loading the YAML file from the /resources folder
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            Path connectFile = Paths.get("./", "cliente.yaml");
+            File file = connectFile.toFile();
+            
+            // Instantiating a new ObjectMapper as a YAMLFactory
+            ObjectMapper om = new ObjectMapper(new YAMLFactory());
+            
+            if(!file.exists()){
+                file.createNewFile();
+                om.writeValue(file, new ClientConnect(
+                        InetAddress.getByName("0.0.0.0"), 
+                        InetAddress.getByName("0.0.0.0"), 
+                        2370, 2370)
+                );
+            } 
+            
+            this.preferences = om.readValue(file, ClientConnect.class);
+        }catch(IOException iox){
+            LOGGER.error("Error en I/O", iox);
+        }
+        
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -91,6 +144,9 @@ public class MainView extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jClock = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -100,6 +156,14 @@ public class MainView extends javax.swing.JFrame {
         jClock.setFont(new java.awt.Font("Courier New", 1, 18)); // NOI18N
         jClock.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jClock.setText("00:00:00");
+
+        jMenu1.setText("File");
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,7 +186,7 @@ public class MainView extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jClock)
-                .addContainerGap(232, Short.MAX_VALUE))
+                .addContainerGap(211, Short.MAX_VALUE))
         );
 
         pack();
@@ -132,6 +196,9 @@ public class MainView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jClock;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JSeparator jSeparator1;
     // End of variables declaration//GEN-END:variables
 }

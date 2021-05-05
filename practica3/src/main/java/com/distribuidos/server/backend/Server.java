@@ -8,7 +8,6 @@ package com.distribuidos.server.backend;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import javax.swing.JTextPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +20,8 @@ public class Server {
     private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
     private Registry registry;
 
-    public Server() throws RemoteException {
-        registry = LocateRegistry.createRegistry(2370);
+    public Server(int port) throws RemoteException {
+        registry = LocateRegistry.createRegistry(port);        
     }
 
     public void startRMI() throws RemoteException {

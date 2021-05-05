@@ -24,8 +24,8 @@ public class ClientOperation {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientOperation.class);
     
-    public ClientOperation() throws NotBoundException, RemoteException{
-        registry = LocateRegistry.getRegistry(2370);
+    public ClientOperation(String addr, int port) throws NotBoundException, RemoteException{
+        registry = LocateRegistry.getRegistry(addr, port);
         toServer = (RMIInterface) registry.lookup("main_books_server");
     }
     
