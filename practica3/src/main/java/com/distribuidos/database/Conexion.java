@@ -1,4 +1,4 @@
-package database;
+package com.distribuidos.database;
 
 import java.sql.*;
 import javax.swing.JOptionPane;
