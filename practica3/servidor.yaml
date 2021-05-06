@@ -1,0 +1,5 @@
+---
+workingPort: 2370
+backupAddress: "0.0.0.0"
+backupPort: 2371
+clientPort: 6000

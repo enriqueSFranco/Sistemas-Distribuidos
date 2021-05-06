@@ -14,6 +14,14 @@ import java.rmi.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.distribuidos.ifaces.RMIClientInterface;
+import com.distribuidos.models.ServerConnect;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.util.List;
@@ -25,6 +33,7 @@ import java.util.logging.Level;
  */
 public class Server {
     
+    private ServerConnect preferences;
     private String direccionRespaldo = "26.58.72.131";
     
     private int puertoServidor = 2370;
@@ -47,7 +56,14 @@ public class Server {
 
     public Server(BooksView vista, boolean isBackup) throws RemoteException {
         this.vista = vista;
-        this.isBackup =isBackup;
+        this.isBackup = isBackup;
+        
+        getCurrentPreferences();
+        this.puertoServidor = preferences.getWorkingPort();
+        this.puertoRespaldo = preferences.getBackupPort();
+        this.direccionRespaldo = preferences.getBackupAddress().getHostAddress();
+        this.puertoCliente = preferences.getClientPort();
+        
         if (!isBackup){
             registry = LocateRegistry.createRegistry(puertoServidor);
         System.out.println("Principal: " + puertoServidor);
@@ -109,6 +125,28 @@ public class Server {
             java.util.logging.Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotBoundException ex) {
             java.util.logging.Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void getCurrentPreferences(){
+        try{
+            // Loading the YAML file from the /resources folder
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            Path connectFile = Paths.get("./", "servidor.yaml");
+            File file = connectFile.toFile();
+            
+            // Instantiating a new ObjectMapper as a YAMLFactory
+            ObjectMapper om = new ObjectMapper(new YAMLFactory());
+            
+            if(!file.exists()){
+                file.createNewFile();
+                om.writeValue(file, new ServerConnect(2370, 
+                        InetAddress.getByName("0.0.0.0"), 2371, 6000));
+            } 
+            
+            this.preferences = om.readValue(file, ServerConnect.class);
+        }catch(IOException iox){
+            LOGGER.error("Error en I/O", iox);
         }
     }
 
