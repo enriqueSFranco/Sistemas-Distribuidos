@@ -25,22 +25,23 @@ import org.slf4j.LoggerFactory;
  *
  * @author pekochu
  */
-public class BooksView extends javax.swing.JFrame {
+public class BackupBooksView extends javax.swing.JFrame {
     
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(BooksView.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(BackupBooksView.class);
     
     private Server server;
     private Thread clockThread;
     private Reloj reloj;
     private ServerConnect preferences;
+    private int servicePort = 2371;
 
     /**
      * Creates new form BooksView
      */
-    public BooksView() {
+    public BackupBooksView() {
         initComponents();
         
-        this.setTitle("Modo: servidor principal");
+        this.setTitle("Modo: servidor de respaldo");
         this.setLocationRelativeTo(null);
         this.setLayout(null);
         this.setResizable(false);
@@ -49,7 +50,7 @@ public class BooksView extends javax.swing.JFrame {
         getPreferences();
         
         try{
-            server = new Server(preferences.getWorkingPort());
+            server = new Server(servicePort);
         }catch(RemoteException rx){
             LOGGER.error("No se pudo crear el objeto remoto", rx);
             JOptionPane.showConfirmDialog(null,
@@ -88,7 +89,7 @@ public class BooksView extends javax.swing.JFrame {
         preferencesItem.setText("Editar preferencias");
         preferencesItem.addActionListener((e) -> {
             java.awt.EventQueue.invokeLater(() -> {
-                new ServerEditPreferences(this).setVisible(true);
+                new BackupServerEditPreferences(this).setVisible(true);
             });
         });
         
@@ -99,7 +100,7 @@ public class BooksView extends javax.swing.JFrame {
         try{
             // Loading the YAML file from the /resources folder
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            Path connectFile = Paths.get("./", "servidor.yaml");
+            Path connectFile = Paths.get("./", "servidor_backup.yaml");
             File file = connectFile.toFile();
             
             // Instantiating a new ObjectMapper as a YAMLFactory
@@ -107,10 +108,12 @@ public class BooksView extends javax.swing.JFrame {
             
             if(!file.exists()){
                 file.createNewFile();
-                om.writeValue(file, new ServerConnect(2370));
+                om.writeValue(file, new ServerConnect(2371));
             } 
             
             this.preferences = om.readValue(file, ServerConnect.class);
+            if(preferences.getWorkingPort() != 0) 
+                servicePort = preferences.getWorkingPort();
         }catch(IOException iox){
             LOGGER.error("Error en I/O", iox);
         }
@@ -135,7 +138,7 @@ public class BooksView extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel1.setText("Modo: SERVIDOR PRINCIPAL");
+        jLabel1.setText("Modo: SERVIDOR DE RESPALDO");
 
         jClock.setFont(new java.awt.Font("Courier New", 1, 18)); // NOI18N
         jClock.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

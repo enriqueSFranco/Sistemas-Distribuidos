@@ -71,7 +71,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="11" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Modo: SERVIDOR PRINCIPAL"/>
+        <Property name="text" type="java.lang.String" value="Modo: SERVIDOR DE RESPALDO"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator1">
