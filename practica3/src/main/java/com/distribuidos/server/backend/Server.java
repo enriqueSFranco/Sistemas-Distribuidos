@@ -86,7 +86,8 @@ public class Server {
         for(String ip: ips){
             try {
                 registryClient = LocateRegistry.getRegistry(ip, puertoCliente);
-                clienteOP = (RMIClientInterface) registry.lookup("book_client");
+                clienteOP = (RMIClientInterface) registryClient.lookup("book_client");
+                System.out.println("IP:"+ip);
                 clienteOP.limpiarDatos();
             } catch (RemoteException ex) {
                 java.util.logging.Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);

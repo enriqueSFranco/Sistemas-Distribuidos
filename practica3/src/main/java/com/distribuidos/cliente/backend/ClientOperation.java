@@ -79,7 +79,7 @@ public class ClientOperation extends UnicastRemoteObject implements RMIClientInt
         } catch (RemoteException ex) {
             java.util.logging.Logger.getLogger(ClientOperation.class.getName()).log(Level.SEVERE, null, ex);
             conectarConRespaldo();
-            
+            libro = toServer.pedirLibro(new SimpleDateFormat("HH:mm:ss").format(new Date()));
         }
         String respuesta = "Error: <No se pudo obtener un libro>";
         if (libro != null){
