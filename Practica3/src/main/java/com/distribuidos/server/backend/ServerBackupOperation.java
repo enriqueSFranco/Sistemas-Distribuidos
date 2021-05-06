@@ -19,7 +19,7 @@ public class ServerBackupOperation extends UnicastRemoteObject implements RMIBac
     
     private BooksView vista;
     
-    public ServerBackupOperation(BooksView vista){
+    public ServerBackupOperation(BooksView vista) throws RemoteException{
         this.vista = vista;
     }
     
