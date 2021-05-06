@@ -162,6 +162,8 @@ public class MainView extends javax.swing.JFrame {
         } catch (RemoteException ex) {
             Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar obtener el libro: \n"+ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

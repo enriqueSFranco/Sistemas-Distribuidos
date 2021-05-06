@@ -34,8 +34,8 @@ public class ClientOperation extends UnicastRemoteObject implements RMIClientInt
     
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientOperation.class);
     
-    private String ipServidor = "localhost";
-    private String ipRespaldo = "localhost";
+    private String ipServidor = "26.152.135.13";
+    private String ipRespaldo = "26.58.72.131";
     
     private int puertoServidor = 2370;
     private int puertoRespaldo = 2371;
@@ -55,7 +55,7 @@ public class ClientOperation extends UnicastRemoteObject implements RMIClientInt
         
         try {
             registryClient = LocateRegistry.createRegistry(puertoCliente);
-            registry.rebind("book_client", this);
+            registryClient.rebind("book_client", this);
         } catch (RemoteException ex) {
             java.util.logging.Logger.getLogger(ClientOperation.class.getName()).log(Level.SEVERE, null, ex);
         }

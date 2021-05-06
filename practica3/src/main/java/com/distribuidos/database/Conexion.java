@@ -315,7 +315,7 @@ public class Conexion {
         PreparedStatement ps;
         ResultSet rs = null;
         try {
-            ps = conn.prepareStatement("SELECT * FROM sesion ORDER BY idSesion DESC LIMIT 1");
+            ps = conn.prepareStatement("SELECT * FROM sesion ORDER BY idPedido DESC LIMIT 1");
             rs = ps.executeQuery();
         } catch (Exception e) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, e);

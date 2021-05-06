@@ -25,7 +25,7 @@ import java.util.logging.Level;
  */
 public class Server {
     
-    private String direccionRespaldo = "localhost";
+    private String direccionRespaldo = "26.58.72.131";
     
     private int puertoServidor = 2370;
     private int puertoRespaldo = 2371;

@@ -10,7 +10,6 @@ import com.distribuidos.database.Conexion;
 import com.distribuidos.ifaces.RMIBackupInterface;
 import com.distribuidos.ifaces.RMIInterface;
 import com.distribuidos.server.gui.BooksView;
-import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
