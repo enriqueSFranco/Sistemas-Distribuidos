@@ -1,0 +1,134 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.distribuidos.cliente.backend;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JLabel;
+
+/**
+ *
+ * @author Dave
+ */
+public class Reloj implements Runnable{
+
+    /**
+     * @return the horas
+     */
+    public int getHoras() {
+        return horas;
+    }
+
+    /**
+     * @return the minutos
+     */
+    public int getMinutos() {
+        return minutos;
+    }
+
+    /**
+     * @return the segundos
+     */
+    public int getSegundos() {
+        return segundos;
+    }
+    
+    /**
+     * @return the segundos
+     */
+    public double getSpeedfactor() {
+        return speedfactor;
+    }
+
+    private JLabel lblReloj;
+    private int horas;
+    private int minutos;
+    private int segundos;
+    private int delay = 1000;
+    private double speedfactor = 1.0;
+    
+    private boolean activo = true;
+    private boolean pausado = false;
+    
+    public Reloj (JLabel lblReloj, int horas, int minutos, int segundos){
+        this.lblReloj = lblReloj;
+        this.horas = horas;
+        this.minutos = minutos;
+        this.segundos = segundos;
+        if (this.lblReloj != null)
+            this.lblReloj.setText( obtenerHora() );
+    }
+    
+    public void detenerReloj(){
+        this.pausado = true;
+    }
+    
+    public void reanudarReloj(){
+        this.pausado = false;
+    }
+    
+    public void setSpeedfactor(double speedfactor) {
+        this.speedfactor = speedfactor;
+    }  
+    
+    public void editarReloj(int horas, int minutos, int segundos, int delay){
+        this.horas = horas;
+        this.minutos = minutos;
+        this.segundos = segundos;
+        this.delay = delay;
+        if (this.lblReloj != null)
+            this.lblReloj.setText( obtenerHora() );
+    }
+    
+    public String obtenerHora(){
+        return  ( getHoras()    > 9 ? ""+getHoras()   :"0"+getHoras())   + ":" +
+                ( getMinutos()  > 9 ? ""+getMinutos() :"0"+getMinutos()) + ":" +
+                ( getSegundos() > 9 ? ""+getSegundos():"0"+getSegundos());
+    }
+    
+    @Override
+    public void run() {
+        int i = 0;
+        while(activo){
+            try {
+                if(!pausado){
+                    try {
+                        Thread.sleep((long) (delay * speedfactor));
+                        this.segundos++;
+                        if(this.getSegundos() == 60){
+                            this.segundos = 0;
+                            this.minutos++;
+                        }
+                        if(this.getMinutos() == 60){
+                            this.minutos = 0;
+                            this.horas++;
+                        }
+                        if(this.getHoras() == 24) {
+                            this.horas = 0;
+                        }
+                        if (this.lblReloj != null && !pausado && activo)
+                            this.lblReloj.setText( obtenerHora() );
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Reloj.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }else{
+                    Thread.sleep(100);
+                }
+                
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Reloj.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    /**
+     * @return the delay
+     */
+    public int getDelay() {
+        return delay;
+    }
+    
+}
