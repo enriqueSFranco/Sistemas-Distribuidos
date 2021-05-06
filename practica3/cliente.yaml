@@ -1,5 +1,6 @@
 ---
-mainServer: "192.168.8.203"
+ownPort: 6000
+mainServer: "0.0.0.0"
 backupServer: "0.0.0.0"
 mainServerPort: 2370
 backupServerPort: 2371

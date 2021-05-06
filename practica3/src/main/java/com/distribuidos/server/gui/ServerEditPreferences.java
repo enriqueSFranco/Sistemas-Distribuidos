@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.regex.Matcher;
@@ -61,6 +63,12 @@ public class ServerEditPreferences extends javax.swing.JFrame {
         
         getCurrentPreferences();
         jServicePort.setText(String.valueOf(editPreferences.getWorkingPort()));
+        String backupAddress = editPreferences.getBackupAddress() == null ? "0.0.0.0"
+                : editPreferences.getBackupAddress().getHostAddress();
+        jBackupAddress.setText(backupAddress);
+        jBackupPort.setText(String.valueOf(editPreferences.getBackupPort()));
+        jClientPort.setText(String.valueOf(editPreferences.getClientPort()));
+
     }
     
     public ServerConnect getCurrentPreferences(){
@@ -75,7 +83,8 @@ public class ServerEditPreferences extends javax.swing.JFrame {
             
             if(!file.exists()){
                 file.createNewFile();
-                om.writeValue(file, new ServerConnect(2370));
+                om.writeValue(file, new ServerConnect(2370, 
+                        InetAddress.getByName("0.0.0.0"), 2371, 6000));
             } 
             
             this.editPreferences = om.readValue(file, ServerConnect.class);
@@ -127,6 +136,12 @@ public class ServerEditPreferences extends javax.swing.JFrame {
         jServicePort = new javax.swing.JTextField();
         jSave = new javax.swing.JButton();
         jErrorMessage = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jBackupAddress = new javax.swing.JTextField();
+        jBackupPort = new javax.swing.JTextField();
+        jClientPort = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -150,6 +165,12 @@ public class ServerEditPreferences extends javax.swing.JFrame {
         jErrorMessage.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jErrorMessage.setForeground(new java.awt.Color(255, 0, 0));
 
+        jLabel2.setText("Servidor de respaldo:");
+
+        jLabel3.setText("Puerto del servidor de respaldo:");
+
+        jLabel4.setText("Puerto del cliente:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -159,16 +180,28 @@ public class ServerEditPreferences extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jServicePort, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jErrorMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSave)))
+                        .addComponent(jSave))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBackupAddress))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBackupPort))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jClientPort)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -182,7 +215,19 @@ public class ServerEditPreferences extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jServicePort)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jBackupAddress)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jBackupPort)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jClientPort)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jErrorMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -194,7 +239,8 @@ public class ServerEditPreferences extends javax.swing.JFrame {
 
     private void jSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSaveActionPerformed
         // TODO add your handling code here:
-        int servicePort;
+        String backupAddress;
+        int servicePort, backupPort, clientPort;
         if(isPortValid(jServicePort.getText())){
             servicePort = Integer.valueOf(jServicePort.getText());
         }else{
@@ -202,11 +248,34 @@ public class ServerEditPreferences extends javax.swing.JFrame {
             return;
         }
         
-        editPreferences.setWorkingPort(servicePort);
-        writePreferences();
-        JOptionPane.showConfirmDialog(null,
+        if (isIPV4Valid(jBackupAddress.getText()) && isPortValid(jBackupPort.getText())) {
+            backupAddress = jBackupAddress.getText();
+            backupPort = Integer.valueOf(jBackupPort.getText());
+        } else {
+            jErrorMessage.setText("Dirección IP o puerto del servidor de respaldo invalido.");
+            return;
+        }
+        
+        if(isPortValid(jClientPort.getText())){
+            clientPort = Integer.valueOf(jClientPort.getText());
+        }else{
+            jErrorMessage.setText("Puerto de cliente invalido.");
+            return;
+        }
+        
+        try{
+            editPreferences.setWorkingPort(servicePort);
+            editPreferences.setBackupAddress(InetAddress.getByName(backupAddress));
+            editPreferences.setBackupPort(backupPort);
+            editPreferences.setClientPort(clientPort);
+            
+            writePreferences();
+            JOptionPane.showConfirmDialog(null,
                 "Cambios guardados", "Información",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        }catch (UnknownHostException uhx) {
+            LOGGER.error("Host desconocido", uhx);
+        }
     }//GEN-LAST:event_jSaveActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -219,8 +288,14 @@ public class ServerEditPreferences extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField jBackupAddress;
+    private javax.swing.JTextField jBackupPort;
+    private javax.swing.JTextField jClientPort;
     private javax.swing.JLabel jErrorMessage;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JButton jSave;
     private javax.swing.JSeparator jSeparator1;

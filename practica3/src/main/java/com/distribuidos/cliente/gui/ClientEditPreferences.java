@@ -48,8 +48,8 @@ public class ClientEditPreferences extends javax.swing.JFrame {
         this.setResizable(false);
         this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
 
-        getCurrentPreferences();
-        
+        getCurrentPreferences();        
+        jPort.setText(String.valueOf(editPreferences.getOwnPort()));
         String mainAddress = editPreferences.getMainServer() == null ? "0.0.0.0"
                 : editPreferences.getMainServer().getHostAddress();
         jMainAddress.setText(mainAddress);
@@ -71,6 +71,7 @@ public class ClientEditPreferences extends javax.swing.JFrame {
         this.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
 
         getCurrentPreferences();
+        jPort.setText(String.valueOf(editPreferences.getOwnPort()));
         String mainAddress = editPreferences.getMainServer() == null ? "0.0.0.0"
                 : editPreferences.getMainServer().getHostAddress();
         jMainAddress.setText(mainAddress);
@@ -94,7 +95,7 @@ public class ClientEditPreferences extends javax.swing.JFrame {
 
             if (!file.exists()) {
                 file.createNewFile();
-                om.writeValue(file, new ClientConnect(
+                om.writeValue(file, new ClientConnect(6000,
                         InetAddress.getByName("0.0.0.0"), 
                         InetAddress.getByName("0.0.0.0"), 
                         2370, 2371)
@@ -156,6 +157,8 @@ public class ClientEditPreferences extends javax.swing.JFrame {
         jBackupPort = new javax.swing.JTextField();
         jSave = new javax.swing.JButton();
         jErrorMessage = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jPort = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -185,6 +188,8 @@ public class ClientEditPreferences extends javax.swing.JFrame {
         jErrorMessage.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jErrorMessage.setForeground(new java.awt.Color(255, 0, 0));
 
+        jLabel6.setText("Puerto:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -206,16 +211,20 @@ public class ClientEditPreferences extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jBackupAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jBackupPort))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jErrorMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSave)))
+                        .addComponent(jSave))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPort)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -225,10 +234,14 @@ public class ClientEditPreferences extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPort)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jMainAddress)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jMainPort)
@@ -241,7 +254,7 @@ public class ClientEditPreferences extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jBackupPort)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jErrorMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -254,7 +267,15 @@ public class ClientEditPreferences extends javax.swing.JFrame {
     private void jSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSaveActionPerformed
         // TODO add your handling code here:
         String mainAddress, backupAddress;
-        int mainPort, backupPort;
+        int ownPort, mainPort, backupPort;
+        
+        if (isPortValid(jMainPort.getText())) {
+            ownPort = Integer.valueOf(jPort.getText());
+        }else {
+            jErrorMessage.setText("Puerto del cliente inválido");
+            return;
+        }
+        
         if (isIPV4Valid(jMainAddress.getText()) && isPortValid(jMainPort.getText())) {
             mainAddress = jMainAddress.getText();
             mainPort = Integer.valueOf(jMainPort.getText());
@@ -272,6 +293,7 @@ public class ClientEditPreferences extends javax.swing.JFrame {
         }
 
         try {
+            editPreferences.setOwnPort(ownPort);
             InetAddress main = InetAddress.getByName(mainAddress);
             editPreferences.setMainServer(main);
             editPreferences.setMainServerPort(mainPort);
@@ -307,8 +329,10 @@ public class ClientEditPreferences extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JTextField jMainAddress;
     private javax.swing.JTextField jMainPort;
+    private javax.swing.JTextField jPort;
     private javax.swing.JButton jSave;
     private javax.swing.JSeparator jSeparator1;
     // End of variables declaration//GEN-END:variables

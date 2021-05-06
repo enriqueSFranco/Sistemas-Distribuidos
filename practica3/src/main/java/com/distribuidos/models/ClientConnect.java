@@ -13,13 +13,15 @@ import java.net.InetAddress;
  */
 public class ClientConnect {
     
+    private int ownPort;
     private InetAddress mainServer;
     private InetAddress backupServer;
     private int mainServerPort;
     private int backupServerPort;
 
-    public ClientConnect(InetAddress mainServer, InetAddress backupServer, 
-            int mainServerPort, int backupServerPort) {
+    public ClientConnect(int ownPort, InetAddress mainServer, 
+            InetAddress backupServer, int mainServerPort, int backupServerPort) {
+        this.ownPort = ownPort;
         this.mainServer = mainServer;
         this.backupServer = backupServer;
         this.mainServerPort = mainServerPort;
@@ -30,6 +32,14 @@ public class ClientConnect {
         
     }
 
+    public int getOwnPort() {
+        return ownPort;
+    }
+
+    public void setOwnPort(int ownPort) {
+        this.ownPort = ownPort;
+    }
+    
     public InetAddress getMainServer() {
         return mainServer;
     }
