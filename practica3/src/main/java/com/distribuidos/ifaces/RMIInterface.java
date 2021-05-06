@@ -5,6 +5,7 @@
  */
 package com.distribuidos.ifaces;
 
+import com.distribuidos.cliente.backend.Libro;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -14,4 +15,6 @@ import java.rmi.RemoteException;
  */
 public interface RMIInterface extends Remote {
     public String helloTo(String name) throws RemoteException;
+    
+    public Libro pedirLibro(String tiempo) throws RemoteException;
 }

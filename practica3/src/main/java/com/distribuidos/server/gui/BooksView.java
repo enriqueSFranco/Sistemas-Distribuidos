@@ -5,12 +5,20 @@
  */
 package com.distribuidos.server.gui;
 
+import com.distribuidos.cliente.backend.Libro;
 import com.distribuidos.cliente.backend.Reloj;
+import com.distribuidos.database.Conexion;
 import com.distribuidos.server.backend.Server;
-import java.net.InetAddress;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import org.slf4j.LoggerFactory;
 
@@ -29,17 +37,22 @@ public class BooksView extends javax.swing.JFrame {
     /**
      * Creates new form BooksView
      */
-    public BooksView() {
+    public BooksView(boolean isBackup) {
         initComponents();
-        
-        this.setTitle("Modo: servidor principal");
+        if (isBackup){
+            this.setTitle("Modo: servidor respaldo");
+            this.jLabel1.setText("Modo: SERVIDOR RESPALDO");
+        } else {
+            this.setTitle("Modo: servidor principal");
+            this.jLabel1.setText("Modo: SERVIDOR PRINCIPAL");
+        }
         this.setLocationRelativeTo(null);
         this.setLayout(null);
         this.setResizable(false);
         this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         
         try{
-            server = new Server();
+            server = new Server(this, isBackup);
         }catch(RemoteException rx){
             LOGGER.error("No se pudo crear el objeto remoto", rx);
             JOptionPane.showConfirmDialog(null,
@@ -56,7 +69,21 @@ public class BooksView extends javax.swing.JFrame {
             LOGGER.error("Error al iniciar el servicio RMI", rx);
         }
         
+        colocarListaDeLibros();
+        this.server.actualizarSesion(false);
+        actualizarSesion();
         initClock();
+    }
+    
+    public void colocarListaDeLibros(){
+        Conexion con = new Conexion();
+        con.crearConexion();
+        refrescarListaDeLibros(con.obtenerLibrosRestantes(this.server.getSesion()));
+        con.desconectar();
+    }
+    
+    public void actualizarSesion(){
+        lbl_sesion.setText("Sesion: " + this.server.getSesion());
     }
     
     public void initClock(){
@@ -65,6 +92,29 @@ public class BooksView extends javax.swing.JFrame {
         
         clockThread = new Thread(reloj);
         clockThread.start();
+    }
+    
+    public void cambiarImagen(String ruta){
+        try {
+            BufferedImage myPicture = ImageIO.read(new File(ruta));
+            //System.out.println("Ruta: "+ ruta);
+            this.lbl_imagen.setText("<html><img height='200' width='125' src='file:"+ruta+"' /></html>");
+            this.lbl_imagen.repaint();
+        } catch (IOException ex) {
+            Logger.getLogger(BooksView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void refrescarListaDeLibros(List<Libro> lista){
+        String listaStr = "Libros Dispoinbles:\n";
+        for(Libro l: lista){
+            listaStr += " - " + l.getNombre() + "\n";
+        }
+        this.ta_librosRestantes.setText(listaStr);
+    }
+
+    public Server getServer() {
+        return server;
     }
 
     /**
@@ -79,6 +129,11 @@ public class BooksView extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jClock = new javax.swing.JLabel();
+        lbl_imagen = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        ta_librosRestantes = new javax.swing.JTextArea();
+        jButton1 = new javax.swing.JButton();
+        lbl_sesion = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -89,6 +144,21 @@ public class BooksView extends javax.swing.JFrame {
         jClock.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jClock.setText("00:00:00");
 
+        ta_librosRestantes.setEditable(false);
+        ta_librosRestantes.setColumns(20);
+        ta_librosRestantes.setRows(5);
+        jScrollPane1.setViewportView(ta_librosRestantes);
+
+        jButton1.setText("Reiniciar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        lbl_sesion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_sesion.setText("Sesion: -");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -96,9 +166,16 @@ public class BooksView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_sesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSeparator1)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(jClock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jClock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbl_imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -110,15 +187,38 @@ public class BooksView extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jClock)
-                .addContainerGap(232, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbl_sesion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.lbl_imagen.setText("");
+        this.lbl_imagen.repaint();
+        this.server.actualizarSesion(true);
+        this.actualizarSesion();
+        this.colocarListaDeLibros();
+        this.server.actualizarRespaldo();
+        this.server.reiniciarClientes();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jClock;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lbl_imagen;
+    private javax.swing.JLabel lbl_sesion;
+    private javax.swing.JTextArea ta_librosRestantes;
     // End of variables declaration//GEN-END:variables
 }

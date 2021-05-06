@@ -12,6 +12,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.slf4j.LoggerFactory;
 
@@ -40,21 +42,13 @@ public class MainView extends javax.swing.JFrame {
         this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
 
         try{
-            client = new ClientOperation();
-        }catch(NotBoundException nx){
-            LOGGER.error("No se pudo conectar", nx);
+            client = new ClientOperation(this);
+        }catch(NotBoundException | RemoteException rx){
+            LOGGER.error("No se pudo conectar", rx);
+            Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, rx);
             JOptionPane.showConfirmDialog(null,
-                    nx.getMessage(), "Error al conectar con el servidor",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
-            
-            System.exit(1);
-            return;
-        }catch(RemoteException rx){
-            LOGGER.error("No se pudo conectar al servidor", rx);
-            JOptionPane.showConfirmDialog(null,
-                    rx.getMessage(), "Error al conectar con el servidor",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
-            
+                rx.getMessage(), "Error al conectar con el servidor",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
             System.exit(1);
             return;
         }
@@ -78,6 +72,11 @@ public class MainView extends javax.swing.JFrame {
         clockThread = new Thread(reloj);
         clockThread.start();
     }
+    
+    public void limpiarDatos(){
+        this.ta_informacionlibro.setText("");
+        this.ta_informacionlibro.repaint();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -88,9 +87,16 @@ public class MainView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jClock = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        ta_informacionlibro = new javax.swing.JTextArea();
+        jButton3 = new javax.swing.JButton();
+
+        jButton2.setText("jButton2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -101,6 +107,18 @@ public class MainView extends javax.swing.JFrame {
         jClock.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jClock.setText("00:00:00");
 
+        jButton1.setText("Pedir Libro");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        ta_informacionlibro.setEditable(false);
+        ta_informacionlibro.setColumns(20);
+        ta_informacionlibro.setRows(5);
+        jScrollPane1.setViewportView(ta_informacionlibro);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -108,9 +126,12 @@ public class MainView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSeparator1)
-                    .addComponent(jClock, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
+                    .addComponent(jClock, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -122,16 +143,37 @@ public class MainView extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jClock)
-                .addContainerGap(232, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            this.ta_informacionlibro.setText(client.pedirLibro());
+            this.ta_informacionlibro.repaint();
+        } catch (RemoteException ex) {
+            Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error al intentar obtener el libro: \n"+ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jClock;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextArea ta_informacionlibro;
     // End of variables declaration//GEN-END:variables
 }
