@@ -24,7 +24,7 @@ public class RMIRespaldoImpl extends UnicastRemoteObject implements RMIRespaldoI
     
     private GUIServidorInterfaz gui;
 
-    public RMIRespaldoImpl(GUIServidorInterfaz gui) {
+    public RMIRespaldoImpl(GUIServidorInterfaz gui) throws RemoteException{
         this.gui = gui;
     }
 
