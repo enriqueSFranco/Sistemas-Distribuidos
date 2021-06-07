@@ -12,4 +12,5 @@ package ljdc.practica3_refactorizacion.servidor.interfaces;
 public interface ServidorInterfaz {
     public void modificarReloj();
     public void reiniciarSesion();
+    public void modificarVelocidadSincronizacion(int nuevaEspera);
 }

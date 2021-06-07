@@ -32,6 +32,7 @@ public class GUIServidor extends javax.swing.JFrame implements GUIServidorInterf
     public GUIServidor(ServidorInterfaz control) {
         initComponents();
         this.control = control;
+        this.spn_sincro.setValue(5000);
     }
 
     /**
@@ -52,6 +53,12 @@ public class GUIServidor extends javax.swing.JFrame implements GUIServidorInterf
         btn_modificarreloj = new javax.swing.JButton();
         lbl_sesion = new javax.swing.JLabel();
         lbl_imagen = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel2 = new javax.swing.JLabel();
+        spn_sincro = new javax.swing.JSpinner();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        ta_sincro = new javax.swing.JTextArea();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -85,6 +92,23 @@ public class GUIServidor extends javax.swing.JFrame implements GUIServidorInterf
 
         lbl_imagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
+        jLabel2.setText("Sincronizacion");
+
+        spn_sincro.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                spn_sincroStateChanged(evt);
+            }
+        });
+
+        jScrollPane2.setAutoscrolls(true);
+
+        ta_sincro.setEditable(false);
+        ta_sincro.setColumns(20);
+        ta_sincro.setRows(5);
+        jScrollPane2.setViewportView(ta_sincro);
+
+        jLabel3.setText("Sincronizar cada (ms):");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -100,10 +124,18 @@ public class GUIServidor extends javax.swing.JFrame implements GUIServidorInterf
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(lbl_imagen, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE))
+                    .addComponent(btn_reiniciarsesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator2)
+                    .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(btn_reiniciarsesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(spn_sincro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -125,6 +157,16 @@ public class GUIServidor extends javax.swing.JFrame implements GUIServidorInterf
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_reiniciarsesion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(spn_sincro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -139,16 +181,26 @@ public class GUIServidor extends javax.swing.JFrame implements GUIServidorInterf
         control.reiniciarSesion();
     }//GEN-LAST:event_btn_reiniciarsesionActionPerformed
 
+    private void spn_sincroStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spn_sincroStateChanged
+        control.modificarVelocidadSincronizacion((int)this.spn_sincro.getValue());
+    }//GEN-LAST:event_spn_sincroStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_modificarreloj;
     private javax.swing.JButton btn_reiniciarsesion;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lbl_imagen;
     private javax.swing.JLabel lbl_reloj;
     private javax.swing.JLabel lbl_sesion;
+    private javax.swing.JSpinner spn_sincro;
     private javax.swing.JTextArea ta_librosRestantes;
+    private javax.swing.JTextArea ta_sincro;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -196,5 +248,11 @@ public class GUIServidor extends javax.swing.JFrame implements GUIServidorInterf
     public void limpiarPortada() {
         this.lbl_imagen.setText("");
         this.lbl_imagen.repaint();
+    }
+
+    @Override
+    public void agregarInfoSincronizacion(String info) {
+        this.ta_sincro.append(info + "\n");
+        this.ta_sincro.setCaretPosition(this.ta_sincro.getDocument().getLength());
     }
 }

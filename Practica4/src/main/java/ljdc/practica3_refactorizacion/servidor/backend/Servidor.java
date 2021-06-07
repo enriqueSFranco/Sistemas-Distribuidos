@@ -55,7 +55,7 @@ public class Servidor implements ServidorInterfaz {
             // - Servidor respaldo
             this.modulo_respaldo = new RMIRespaldoImpl(gui);
             // - Servidor sincronizacion
-            //this.modulo_sincronizacion = new RMIServidorImpl(gui);
+            this.modulo_sincronizacion = new RMISincronizacionImpl(manejadorConfiguracion, gui, reloj);
             
             // - Enlazamos interfaces RMI
             // Servidor general
@@ -63,7 +63,9 @@ public class Servidor implements ServidorInterfaz {
             // - Servidor respaldo
             registro.rebind("respaldo", modulo_respaldo);
             // - Servidor sincronizacion
-            //registro.rebind("sincronizacion", modulo_sincronizacion);
+            registro.rebind("sincronizacion", modulo_sincronizacion);
+            
+            this.modulo_sincronizacion.iniciarSincronizacion();
             
             // - Solicitamos actualizacion de base de datos a servidores activos
             this.modulo_servidor.sincronizarBaseDeDatos();
@@ -99,6 +101,11 @@ public class Servidor implements ServidorInterfaz {
         this.modulo_servidor.reiniciarSesion();
         this.modulo_servidor.reiniciarClientes();
     }
-    
+
+    @Override
+    public void modificarVelocidadSincronizacion(int nuevaEspera) {
+        if (this.modulo_sincronizacion != null)
+            this.modulo_sincronizacion.setEspera(nuevaEspera);
+    }
     
 }

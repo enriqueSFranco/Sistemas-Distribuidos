@@ -21,5 +21,6 @@ public interface GUIServidorInterfaz {
     public void actualizarReloj(String hora);
     public void actualizarLista(List<Libro> lista);
     public void actualizarImagen(String ruta);
+    public void agregarInfoSincronizacion(String info);
     public JLabel obtenerEtiquetaDeReloj();
 }

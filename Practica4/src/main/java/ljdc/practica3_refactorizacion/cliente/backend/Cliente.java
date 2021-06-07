@@ -51,13 +51,13 @@ public class Cliente implements ClienteInterfaz{
             // - Servidor general
             this.modulo_cliente = new RMIClienteImpl(manejadorConfiguracion, gui, reloj);
             // - Servidor sincronizacion
-            //this.modulo_sincronizacion = new RMIServidorImpl(gui);
+            this.modulo_sincronizacion = new RMISincronizacionImpl(manejadorConfiguracion, null, reloj);
             
             // - Enlazamos interfaces RMI
             // - Servidor general
             registro.rebind("cliente", modulo_cliente);
             // - Cliente sincronizacion
-            //registro.rebind("sincronizacion", modulo_sincronizacion);
+            registro.rebind("sincronizacion", modulo_sincronizacion);
             
             //Registrarse en servidor
             this.modulo_cliente.registrarse();

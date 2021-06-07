@@ -47,6 +47,18 @@ CREATE TABLE IF NOT EXISTS estadoactual(
 	sesion INT
 );
 
+
+
+
+
+CREATE TABLE IF NOT EXISTS equipo (
+	idEquipo INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	ip VARCHAR(20),
+	puerto int
+);
+
+
+
 INSERT INTO libro VALUES
 ("9788420665658", "Crimen y Castigo", "Fiódor Dostoyevski", "Editorial Alianza", 319.0, "./imagenes/crimenycastigo.jpg"),
 ("9786070726873" ,"El Perfume", "Patrick Süskind", "booket", 218.0, "./imagenes/elperfume.jpg"),

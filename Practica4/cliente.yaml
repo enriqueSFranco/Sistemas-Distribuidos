@@ -6,4 +6,6 @@ servidores:
 - direccion: "127.0.0.1"
   puerto: 7000
 servidor_principal: "127.0.0.1"
-servidor_sincronizacion: "127.0.0.1"
+servidor_sincronizacion:
+  direccion: "127.0.0.1"
+  puerto: 2370

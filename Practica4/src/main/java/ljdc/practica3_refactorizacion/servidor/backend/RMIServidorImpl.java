@@ -41,7 +41,7 @@ public class RMIServidorImpl extends UnicastRemoteObject implements RMIServidorI
     private GUIServidorInterfaz gui;
     private Reloj reloj;
 
-    public RMIServidorImpl(ManejadorDeConfiguracion manejador_config, GUIServidorInterfaz gui, Reloj reloj) {
+    public RMIServidorImpl(ManejadorDeConfiguracion manejador_config, GUIServidorInterfaz gui, Reloj reloj)  throws RemoteException {
         this.manejador_config = manejador_config;
         this.gui = gui;
         this.reloj = reloj;

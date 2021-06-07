@@ -33,7 +33,7 @@ public class RMIClienteImpl extends UnicastRemoteObject implements RMIClienteInt
     private GUIClienteInterfaz gui;
     private Reloj reloj;
     
-    public RMIClienteImpl(ManejadorDeConfiguracion manejadorConfiguracion, GUIClienteInterfaz gui, Reloj reloj){
+    public RMIClienteImpl(ManejadorDeConfiguracion manejadorConfiguracion, GUIClienteInterfaz gui, Reloj reloj) throws RemoteException{
         this.manejadorConfiguracion = manejadorConfiguracion;
         this.gui = gui;
         this.reloj = reloj;

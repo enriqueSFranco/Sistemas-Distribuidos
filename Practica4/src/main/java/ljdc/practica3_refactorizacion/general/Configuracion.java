@@ -19,12 +19,12 @@ public class Configuracion implements Serializable {
     
     protected List<InfoServidor> servidores;
     protected InetAddress servidor_principal;
-    protected InetAddress servidor_sincronizacion;
+    protected InfoServidor servidor_sincronizacion;
 
     public Configuracion() {
     }
 
-    public Configuracion(int puerto, List<InfoServidor> servidores, InetAddress servidor_principal, InetAddress servidor_sincronizacion) {
+    public Configuracion(int puerto, List<InfoServidor> servidores, InetAddress servidor_principal, InfoServidor servidor_sincronizacion) {
         this.puerto = puerto;
         this.servidores = servidores;
         this.servidor_principal = servidor_principal;
@@ -55,11 +55,11 @@ public class Configuracion implements Serializable {
         this.servidor_principal = servidor_principal;
     }
 
-    public InetAddress getServidor_sincronizacion() {
+    public InfoServidor getServidor_sincronizacion() {
         return servidor_sincronizacion;
     }
 
-    public void setServidor_sincronizacion(InetAddress servidor_sincronizacion) {
+    public void setServidor_sincronizacion(InfoServidor servidor_sincronizacion) {
         this.servidor_sincronizacion = servidor_sincronizacion;
     }
     

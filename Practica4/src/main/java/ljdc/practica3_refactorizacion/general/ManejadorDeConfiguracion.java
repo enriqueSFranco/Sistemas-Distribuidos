@@ -49,7 +49,7 @@ public class ManejadorDeConfiguracion implements Serializable {
             configuracion = new Configuracion();
             configuracion.setPuerto(puerto_por_defecto);
             configuracion.setServidor_principal(InetAddress.getByName(direccion_por_defecto));
-            configuracion.setServidor_sincronizacion(InetAddress.getByName(direccion_por_defecto));
+            configuracion.setServidor_sincronizacion(new InfoServidor(InetAddress.getByName(direccion_por_defecto), puerto_por_defecto));
             configuracion.setServidores(new ArrayList<>());
             configuracion.getServidores().add(new InfoServidor(InetAddress.getByName(direccion_por_defecto), puerto_por_defecto));
             
@@ -108,9 +108,10 @@ public class ManejadorDeConfiguracion implements Serializable {
         ).findFirst().isPresent();
     }
     
-    public boolean esSincronizador(InetAddress serv){
+    public boolean esSincronizador(InfoServidor serv){
         return this.configuracion.servidores.stream().filter(
-                servidor->servidor.getDireccion().equals(serv)
+                servidor->servidor.getDireccion().getHostAddress().equals(serv.getDireccion().getHostAddress())
+                && servidor.getPuerto() == serv.getPuerto()
         ).findFirst().isPresent();
     }
 

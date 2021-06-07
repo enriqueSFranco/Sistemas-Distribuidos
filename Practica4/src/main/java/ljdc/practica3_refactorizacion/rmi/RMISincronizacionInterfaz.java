@@ -6,13 +6,20 @@
 package ljdc.practica3_refactorizacion.rmi;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  *
  * @author Dave
  */
-public interface RMISincronizacionInterfaz {
+public interface RMISincronizacionInterfaz extends Remote {
     
-    
+    /**
+     * 
+     * @return El tiempo en milisegundos del reloj
+     */
+    public long obtenerTiempo(long tiempo) throws RemoteException;
+    public void cambiarTiempo(long ajuste) throws RemoteException;
+    public void cambiarTiempo(int horas, int minutos, int segundos, int delta) throws RemoteException;
     
 }

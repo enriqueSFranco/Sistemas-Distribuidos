@@ -56,7 +56,8 @@ public class GUIConfiguracion extends javax.swing.JFrame {
                 info.getDireccion(),
                 info.getPuerto(),
                 info.getDireccion().equals(this.config.getConfiguracion().getServidor_principal()), 
-                info.getDireccion().equals(this.config.getConfiguracion().getServidor_sincronizacion())
+                info.getDireccion().getHostAddress().equals(this.config.getConfiguracion().getServidor_sincronizacion().getDireccion().getHostAddress())
+                    && info.getPuerto() == this.config.getConfiguracion().getServidor_sincronizacion().getPuerto()
             });
         });
     }
@@ -235,6 +236,8 @@ public class GUIConfiguracion extends javax.swing.JFrame {
             for( int i=0; i<modelo.getRowCount(); i++ ){
                 try {
                     String [] nombre_direccion = modelo.getValueAt(i, 0).toString().split("/");
+                    int puerto_actual = (int) modelo.getValueAt(i, 1);
+                    System.out.print("Direccion: "+nombre_direccion[nombre_direccion.length-1] + "\tPuerto: "+puerto_actual + "\t");
                     this.config.getConfiguracion().getServidores().add(new InfoServidor(
                             InetAddress.getByName(nombre_direccion[nombre_direccion.length-1]) ,
                             (int) modelo.getValueAt(i, 1)));
@@ -242,8 +245,10 @@ public class GUIConfiguracion extends javax.swing.JFrame {
                         this.config.getConfiguracion().setServidor_principal(InetAddress.getByName(nombre_direccion[nombre_direccion.length-1]));
                     }
                     if ( (boolean) modelo.getValueAt(i, 3) ){
-                        this.config.getConfiguracion().setServidor_sincronizacion(InetAddress.getByName(nombre_direccion[nombre_direccion.length-1]));
+                        System.out.print("Es Sincronizador");
+                        this.config.getConfiguracion().setServidor_sincronizacion(new InfoServidor(InetAddress.getByName(nombre_direccion[nombre_direccion.length-1]), puerto_actual));
                     }
+                    System.out.println("\n");
                 } catch (UnknownHostException ex) {
                     Logger.getLogger(GUIConfiguracion.class.getName()).log(Level.SEVERE, null, ex);
                 }
