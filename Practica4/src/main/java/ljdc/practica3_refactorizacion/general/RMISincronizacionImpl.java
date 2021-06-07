@@ -92,7 +92,7 @@ public class RMISincronizacionImpl extends UnicastRemoteObject implements RMISin
                             registro = LocateRegistry.getRegistry(serv.getDireccion().getHostAddress(), serv.getPuerto());
                             RMISincronizacionInterfaz dispo = (RMISincronizacionInterfaz)registro.lookup("sincronizacion");
                             tiempoDispositivo = dispo.obtenerTiempo(mi_tiempo);
-                            if (tiempoDispositivo > limiteDesface){// Se desfasa demasiado el tiempo
+                            if (-limiteDesface > tiempoDispositivo || tiempoDispositivo > limiteDesface){// Se desfasa demasiado el tiempo
                                 //Agregar a dispositivos desfazados y contiuar con el siguiente dispositivo
                                 dispositivosDesfazados.add(serv);
                                 continue;
@@ -117,7 +117,7 @@ public class RMISincronizacionImpl extends UnicastRemoteObject implements RMISin
                             registro = LocateRegistry.getRegistry(usu.getIp(), usu.getPuerto());
                             RMISincronizacionInterfaz dispo = (RMISincronizacionInterfaz)registro.lookup("sincronizacion");
                             tiempoDispositivo = dispo.obtenerTiempo(mi_tiempo);
-                            if (tiempoDispositivo > limiteDesface){// Se desfasa demasiado el tiempo
+                            if (-limiteDesface > tiempoDispositivo || tiempoDispositivo > limiteDesface){// Se desfasa demasiado el tiempo
                                 //Agregar a dispositivos desfazados y contiuar con el siguiente dispositivo
                                 dispositivosDesfazados.add(new InfoServidor(InetAddress.getByName(usu.getIp()), usu.getPuerto()));
                                 continue;

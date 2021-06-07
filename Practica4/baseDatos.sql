@@ -57,6 +57,22 @@ CREATE TABLE IF NOT EXISTS equipo (
 	puerto int
 );
 
+CREATE TABLE IF NOT EXISTS horasincronizador(
+	idHoraSincronizador INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	horaInicial TIME,
+	horaNueva TIME,
+);
+
+CREATE TABLE IF NOT EXISTS sincronizacion(
+	idSincronizacion INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	idEquipo INT,
+	idHoraSincronizador INT,
+	horaEquipo TIME,
+	ajuste INT,
+	FOREIGN KEY (idEquipo) REFERENCES equipo(idEquipo)  ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (idHoraSincronizador) REFERENCES horasincronizador(idHoraSincronizador)  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 
 
 INSERT INTO libro VALUES
